@@ -8,12 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.ravi.tasks.data.TaskRepository
 import com.ravi.tasks.data.local.Task
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class TaskViewModel(private val repo: TaskRepository): ViewModel() {
 
-    val tasks = repo.tasks.stateIn(
+    val tasks: StateFlow<List<Task>> = repo.tasks.stateIn(
         viewModelScope,
         SharingStarted.Companion.WhileSubscribed(),
         emptyList()
