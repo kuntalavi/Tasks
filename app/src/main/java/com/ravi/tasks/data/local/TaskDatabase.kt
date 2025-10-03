@@ -1,4 +1,4 @@
-package com.ravi.tasks
+package com.ravi.tasks.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

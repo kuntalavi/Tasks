@@ -1,22 +1,23 @@
-package com.ravi.tasks
+package com.ravi.tasks.ui.viewmodel
 
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ravi.tasks.data.TaskRepository
+import com.ravi.tasks.data.local.Task
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class TaskViewModel(context: Context): ViewModel() {
+class TaskViewModel(private val repo: TaskRepository): ViewModel() {
 
-    private val dao = DatabaseProvider.getDatabase(context).taskDao()
-
-    val tasks: StateFlow<List<Task>> = dao.getAllTasks()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+    val tasks = repo.tasks.stateIn(
+        viewModelScope,
+        SharingStarted.Companion.WhileSubscribed(),
+        emptyList()
+    )
 
     var newTask by mutableStateOf("")
         private set
@@ -27,7 +28,7 @@ class TaskViewModel(context: Context): ViewModel() {
     fun addTask() {
         if (newTask.isNotBlank()) {
             viewModelScope.launch {
-                dao.upsertTask(Task(title = newTask))
+                repo.addTask(Task(title = newTask))
                 newTask = ""
                 showDialog = false
             }
@@ -36,7 +37,7 @@ class TaskViewModel(context: Context): ViewModel() {
 
     fun deleteTask(task: Task) {
         viewModelScope.launch {
-           dao.deleteTask(task)
+           repo.removeTask(task)
         }
     }
 

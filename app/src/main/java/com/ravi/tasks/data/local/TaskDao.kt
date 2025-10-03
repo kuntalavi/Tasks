@@ -1,4 +1,4 @@
-package com.ravi.tasks
+package com.ravi.tasks.data.local
 
 import androidx.room.Dao
 import androidx.room.Delete

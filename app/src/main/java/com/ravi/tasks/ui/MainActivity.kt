@@ -1,4 +1,4 @@
-package com.ravi.tasks
+package com.ravi.tasks.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -27,22 +27,32 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
+import com.ravi.tasks.DatabaseProvider
+import com.ravi.tasks.data.TaskRepository
+import com.ravi.tasks.ui.viewmodel.TaskViewModel
+import com.ravi.tasks.TaskViewModelFactory
+import com.ravi.tasks.ui.component.AddTask
 import com.ravi.tasks.ui.theme.Purple10
 import com.ravi.tasks.ui.theme.TasksTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val dao = DatabaseProvider.getDatabase(applicationContext).taskDao()
+        val repo = TaskRepository(dao)
+        val factory = TaskViewModelFactory(repo)
+        val viewModel = ViewModelProvider(this, factory)[TaskViewModel::class.java]
+
         enableEdgeToEdge()
         setContent {
             TasksTheme {
-                App()
+                App(viewModel)
             }
         }
     }
@@ -50,9 +60,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App() {
-    val context = LocalContext.current.applicationContext
-    val viewModel = remember { TaskViewModel(context) }
+fun App(viewModel: TaskViewModel) {
     val tasks by viewModel.tasks.collectAsState()
     val showDialog = viewModel.showDialog
 

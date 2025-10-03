@@ -1,4 +1,4 @@
-package com.ravi.tasks
+package com.ravi.tasks.ui.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.ravi.tasks.ui.viewmodel.TaskViewModel
 
 @Composable
 fun AddTask(viewModel: TaskViewModel){

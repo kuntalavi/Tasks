@@ -1,4 +1,4 @@
-package com.ravi.tasks
+package com.ravi.tasks.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,4 +9,3 @@ data class Task(
     val id: Int = 0,
     val title: String
 )
-
